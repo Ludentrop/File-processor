@@ -28,24 +28,27 @@ def main(file: str = args.f, mode: MODE = False) -> None:
     normalized = normalize(lines)
     frxy_dict = word_frxy(normalized)
 
-    if (all(args_t) or not any(args_t)) and not mode:
-        print("THE MOST FREQUENT WORDS:")
-        for word in m(frxy_dict):
-            print(f"\t\t\t{word!r}")
+    if not bool(frxy_dict):
+        print("All words are unique")
+    else:
+        if (all(args_t) or not any(args_t)) and not mode:
+            print("THE MOST FREQUENT WORDS:")
+            for word in m(frxy_dict):
+                print(f"\t\t\t{word!r}")
 
-        print("\nLESS FREQUENT WORDS:")
-        for word in l(frxy_dict):
-            print(f"\t\t\t{word!r}")
+            print("\nLESS FREQUENT WORDS:")
+            for word in l(frxy_dict):
+                print(f"\t\t\t{word!r}")
 
-    elif args.m:
-        print("THE MOST FREQUENT WORDS:")
-        for word in m(frxy_dict):
-            print(f"\t\t  {word!r}")
+        elif args.m:
+            print("THE MOST FREQUENT WORDS:")
+            for word in m(frxy_dict):
+                print(f"\t\t  {word!r}")
 
-    elif args.l:
-        print("LESS FREQUENT WORDS:")
-        for word in l(frxy_dict):
-            print(f"\t\t  {word!r}")
+        elif args.l:
+            print("LESS FREQUENT WORDS:")
+            for word in l(frxy_dict):
+                print(f"\t\t  {word!r}")
 
 
 def get_from_file(file: str) -> typing.List[str]:
