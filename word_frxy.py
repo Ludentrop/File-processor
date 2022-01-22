@@ -28,7 +28,7 @@ def main(file: str = args.f, mode: MODE = False) -> None:
     normalized = normalize(lines)
     frxy_dict = word_frxy(normalized)
 
-    if not bool(frxy_dict):
+    if not frxy_dict:
         print("All words are unique")
     else:
         if (all(args_t) or not any(args_t)) and not mode:
