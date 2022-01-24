@@ -1,4 +1,11 @@
-import typing, argparse, string
+"""
+This module represents tools of defining the most popular and unpopular words.
+You can run it from command line or import it as a module.
+"""
+
+import typing
+import argparse
+import string
 
 parser = argparse.ArgumentParser(
     prog="word_frxy", description="Find the most popular and unpopular words"
@@ -12,12 +19,11 @@ args_t = (args.m, args.l)
 MODE = typing.Literal["m", "l"]
 
 
-def main(file: str = args.f, mode: MODE = False) -> None:
+def main(mode: MODE = False) -> None:
     """
     The function print the most frequent and less frequent words
 
     Args:
-        file (str): The file is a file name or a file path
         mode (str): The mode determines what information needs to be returned:
                     m - Print the most frequent words
                     l - Print less frequent words
@@ -33,21 +39,21 @@ def main(file: str = args.f, mode: MODE = False) -> None:
     else:
         if (all(args_t) or not any(args_t)) and not mode:
             print("THE MOST FREQUENT WORDS:")
-            for word in m(frxy_dict):
+            for word in most(frxy_dict):
                 print(f"\t\t\t{word!r}")
 
             print("\nLESS FREQUENT WORDS:")
-            for word in l(frxy_dict):
+            for word in less(frxy_dict):
                 print(f"\t\t\t{word!r}")
 
         elif args.m:
             print("THE MOST FREQUENT WORDS:")
-            for word in m(frxy_dict):
+            for word in most(frxy_dict):
                 print(f"\t\t  {word!r}")
 
         elif args.l:
             print("LESS FREQUENT WORDS:")
-            for word in l(frxy_dict):
+            for word in less(frxy_dict):
                 print(f"\t\t  {word!r}")
 
 
@@ -63,7 +69,10 @@ def get_from_file(file: str) -> typing.List[str]:
     """
     if isinstance(file, list):
         file = file[0]
-    lines = [line.strip() for line in open(file, encoding="utf-8")]
+    lines = []
+    with open(file, encoding="utf-8") as input_file:
+        for line in input_file:
+            lines.append(line.strip())
 
     return lines
 
@@ -93,15 +102,13 @@ def word_frxy(lines: typing.List[str]) -> typing.Dict[str, int]:
     """
     if len(set(lines)) == len(lines):
         return ""
-    else:
-        words = {}
-        for line in lines:
-            words[line] = words.get(line, 0) + 1
-
-        return words
+    words = {}
+    for line in lines:
+        words[line] = words.get(line, 0) + 1
+    return words
 
 
-def m(dct: typing.Dict[str, int]) -> typing.List[str]:
+def most(dct: typing.Dict[str, int]) -> typing.List[str]:
     """
     The function finds the most popular words
 
@@ -111,11 +118,11 @@ def m(dct: typing.Dict[str, int]) -> typing.List[str]:
     Returns:
         typing.List[str]: A list of the most popular words
     """
-    mx = max(dct.values())
-    return [k for k in dct.keys() if dct[k] == mx]
+    maximal = max(dct.values())
+    return [k for k in dct.keys() if dct[k] == maximal]
 
 
-def l(dct: typing.Dict[str, int]) -> typing.List[str]:
+def less(dct: typing.Dict[str, int]) -> typing.List[str]:
     """
     The function finds unpopular words
 
@@ -125,8 +132,8 @@ def l(dct: typing.Dict[str, int]) -> typing.List[str]:
     Returns:
         typing.List[str]: A list of unpopular words
     """
-    mn = min(dct.values())
-    return [k for k in dct.keys() if dct[k] == mn]
+    minimal = min(dct.values())
+    return [k for k in dct.keys() if dct[k] == minimal]
 
 
 if __name__ == "__main__":

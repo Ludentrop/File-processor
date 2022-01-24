@@ -1,19 +1,19 @@
-import typing, argparse, string
+"""
+This module represents tools of file analyzing.
+You can run it from command line or import it as a module.
+"""
 
+import typing
+import argparse
+import string
 
 parser = argparse.ArgumentParser(
     prog="Proceess a file", description="Analyze a given file data"
 )
 parser.add_argument("f", type=str, nargs="*", help="File name")
-parser.add_argument(
-    "-L", action="store_true", help="Return the longest line"
-)
-parser.add_argument(
-    "-W", action="store_true", help="Return the longest word"
-)
-parser.add_argument(
-    "-a", action="store_true", help="Return all characteristics"
-)
+parser.add_argument("-L", action="store_true", help="Return the longest line")
+parser.add_argument("-W", action="store_true", help="Return the longest word")
+parser.add_argument("-a", action="store_true", help="Return all characteristics")
 args = parser.parse_args()
 
 MODE = typing.Literal["L", "W", "a"]
@@ -36,7 +36,10 @@ def analysis(file: str = args.f, mode: MODE = False) -> None:
     """
     if isinstance(file, list):
         file = file[0]
-    lines = [line.strip() for line in open(file, encoding="utf-8")]
+    lines = []
+    with open(file, encoding="utf-8") as input_file:
+        for line in input_file:
+            lines.append(line.strip())
 
     args_t = (args.L, args.W, args.a)
 
@@ -83,7 +86,7 @@ def the_longest_lines(lines: typing.List[str]) -> typing.Set[str]:
     Returns:
         Set[str]: The function returns a set of the longest lines
     """
-    longest = max([i for i in lines], key=len)
+    longest = max(lines, key=len)
 
     return {line.rstrip() for line in [i for i in lines if len(i) == len(longest)]}
 
@@ -102,15 +105,14 @@ def the_longest_words(lines: typing.List[str]) -> typing.Set[str]:
         [j.strip(string.punctuation) for i in lines for j in i.split()], key=len
     )
 
-    return {
-        word
-        for word in [
+    return set(
+        [
             j.strip(string.punctuation)
             for i in lines
             for j in i.split()
             if len(j.strip(string.punctuation)) == len(longest)
         ]
-    }
+    )
 
 
 def count_lines(lines: typing.List[str]) -> int:
@@ -149,9 +151,8 @@ def count_chars(lines: typing.List[str]) -> int:
     Returns:
         Int: The function returns a number of characters
     """
-    l = [j.strip(string.punctuation) for i in lines for j in i if j != " "]
 
-    return len(l)
+    return len([j.strip(string.punctuation) for i in lines for j in i if j != " "])
 
 
 if __name__ == "__main__":
